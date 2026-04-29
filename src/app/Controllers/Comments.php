@@ -10,7 +10,6 @@ class Comments extends BaseController
     {
         $commentModel = new CommentModel();
         
-        // Получаем 3 комментария на страницу (как в Laravel с paginate)
         $page = $this->request->getGet('page') ?? 1;
         $perPage = 3;
         
@@ -44,16 +43,19 @@ class Comments extends BaseController
             ]);
         }
         
-        $commentModel->insert([
+        $id = $commentModel->insert([
             'name' => $this->request->getPost('name'),
             'text' => $this->request->getPost('text'),
             'date' => $this->request->getPost('date'),
             'created_at' => date('Y-m-d H:i:s')
         ]);
         
+        $comment = $commentModel->find($id);
+        
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Комментарий добавлен!'
+            'message' => 'Комментарий добавлен!',
+            'comment' => $comment
         ]);
     }
     
