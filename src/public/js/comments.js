@@ -1,8 +1,20 @@
+function getSortParams() {
+    return {
+        sortBy: $('#sortBy').val(),
+        sortDir: $('#sortDir').val()
+    };
+}
+
 function refreshComments(page = 1) {
+    const sortParams = getSortParams();
     $.ajax({
         url: '/comments/list',
         type: 'GET',
-        data: { page: page },
+        data: {
+            page: page,
+            sortBy: sortParams.sortBy,
+            sortDir: sortParams.sortDir
+        },
         dataType: 'json',
         success: function(response) {
             if (response.success) {
@@ -47,6 +59,10 @@ function bindPaginationLinks() {
 function initComments() {
     const today = new Date().toISOString().split('T')[0];
     $('#date').val(today);
+
+    $('#sortBy, #sortDir').on('change', function() {
+        refreshComments(1);
+    });
 
     $('#commentForm').on('submit', function(e) {
         e.preventDefault();

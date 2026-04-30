@@ -6,6 +6,28 @@ $this->section('content');
 <div class="container mt-5">
     <h1 class="mb-4">💬 Комментарии</h1>
 
+    <!-- Панель сортировки -->
+    <div class="card mb-4 border-light">
+        <div class="card-body">
+            <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                    <label for="sortBy" class="form-label small mb-1">Сортировать по:</label>
+                    <select id="sortBy" class="form-select form-select-sm">
+                        <option value="id" <?= $sortBy === 'id' ? 'selected' : '' ?>>ID</option>
+                        <option value="date" <?= $sortBy === 'date' ? 'selected' : '' ?>>Дате добавления</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="sortDir" class="form-label small mb-1">Направление:</label>
+                    <select id="sortDir" class="form-select form-select-sm">
+                        <option value="DESC" <?= $sortDir === 'DESC' ? 'selected' : '' ?>>По убыванию</option>
+                        <option value="ASC" <?= $sortDir === 'ASC' ? 'selected' : '' ?>>По возрастанию</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Список комментариев -->
     <div id="commentsContainer">
         <?php echo view('comments/list', [
@@ -13,7 +35,9 @@ $this->section('content');
             'pager' => $pager,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
-            'totalComments' => $totalComments
+            'totalComments' => $totalComments,
+            'sortBy' => $sortBy,
+            'sortDir' => $sortDir
         ]); ?>
     </div>
 

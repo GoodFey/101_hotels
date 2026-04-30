@@ -1,10 +1,11 @@
 <?php if (!empty($comments)): ?>
     <?php foreach ($comments as $comment): ?>
         <div class="card mb-3 comment-item" data-id="<?= $comment['id'] ?>">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="fas fa-envelope"></i> <?= htmlspecialchars($comment['name']) ?>
-                </h5>
+        <div class="card-body">
+            <h5 class="card-title">
+                <small class="text-muted">#<?= $comment['id'] ?></small>
+                <i class="fas fa-envelope"></i> <?= htmlspecialchars($comment['name']) ?>
+            </h5>
                 <p class="card-text"><?= htmlspecialchars($comment['text']) ?></p>
                 <small class="text-muted d-block mb-2">
                     📅 <?= $comment['date'] ?>

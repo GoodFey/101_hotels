@@ -11,10 +11,13 @@ class Comments extends BaseController
         $commentModel = new CommentModel();
         
         $page = $this->request->getGet('page') ?? 1;
+        $sortBy = $this->request->getGet('sortBy') ?? 'id';
+        $sortDir = $this->request->getGet('sortDir') ?? 'DESC';
+
         $perPage = 3;
         
         $comments = $commentModel
-            ->orderBy('id', 'DESC')
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage, 'comments', $page);
         
         $pager = $commentModel->pager;
@@ -26,7 +29,9 @@ class Comments extends BaseController
             'pager' => $pager,
             'currentPage' => (int)$page,
             'totalPages' => $totalPages,
-            'totalComments' => $totalComments
+            'totalComments' => $totalComments,
+            'sortBy' => $sortBy,
+            'sortDir' => $sortDir
         ]);
     }
     
@@ -88,10 +93,13 @@ class Comments extends BaseController
         $commentModel = new CommentModel();
 
         $page = $this->request->getGet('page') ?? 1;
+        $sortBy = $this->request->getGet('sortBy') ?? 'id';
+        $sortDir = $this->request->getGet('sortDir') ?? 'DESC';
+
         $perPage = 3;
 
         $comments = $commentModel
-            ->orderBy('id', 'DESC')
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage, 'comments', $page);
 
         $pager = $commentModel->pager;
@@ -103,7 +111,9 @@ class Comments extends BaseController
             'pager' => $pager,
             'currentPage' => (int)$page,
             'totalPages' => $totalPages,
-            'totalComments' => $totalComments
+            'totalComments' => $totalComments,
+            'sortBy' => $sortBy,
+            'sortDir' => $sortDir
         ]);
 
         return $this->response->setJSON([
