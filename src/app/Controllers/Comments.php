@@ -63,7 +63,7 @@ class Comments extends BaseController
         
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Комментарий добавлен!',
+            'message' => 'Comment added!',
             'comment' => $comment
         ]);
     }
@@ -73,17 +73,17 @@ class Comments extends BaseController
         $commentModel = new CommentModel();
         
         if (!$id || !$commentModel->find($id)) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Комментарий не найден'
-            ], 404);
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Comment not found'
+        ], 404);
         }
         
         $commentModel->delete($id);
         
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Комментарий удален!'
+            'message' => 'Comment deleted!'
         ]);
     }
 

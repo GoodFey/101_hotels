@@ -16,18 +16,18 @@ function validateNameField() {
     const inputEl = $('#name');
 
     if (!email) {
-        errorEl.text('Email не может быть пустым');
+        errorEl.text('Email is required').addClass('show');
         inputEl.addClass('is-invalid');
         return false;
     }
 
     if (!validateEmail(email)) {
-        errorEl.text('Введите корректный email адрес');
+        errorEl.text('Enter a valid email address').addClass('show');
         inputEl.addClass('is-invalid');
         return false;
     }
 
-    errorEl.text('');
+    errorEl.text('').removeClass('show');
     inputEl.removeClass('is-invalid');
     return true;
 }
@@ -38,18 +38,18 @@ function validateTextField() {
     const inputEl = $('#text');
 
     if (!text) {
-        errorEl.text('Комментарий не может быть пустым');
+        errorEl.text('Comment cannot be empty').addClass('show');
         inputEl.addClass('is-invalid');
         return false;
     }
 
     if (text.length < 5) {
-        errorEl.text('Минимум 5 символов');
+        errorEl.text('Minimum 5 characters').addClass('show');
         inputEl.addClass('is-invalid');
         return false;
     }
 
-    errorEl.text('');
+    errorEl.text('').removeClass('show');
     inputEl.removeClass('is-invalid');
     return true;
 }
@@ -78,7 +78,7 @@ function refreshComments(page = 1) {
 function bindDeleteButtons() {
     $(document).off('click', '.delete-btn');
     $(document).on('click', '.delete-btn', function() {
-        if (!confirm('Вы уверены?')) return;
+        if (!confirm('Are you sure?')) return;
 
         const id = $(this).data('id');
 
@@ -113,7 +113,7 @@ function initComments() {
 
     $('#name, #text').on('focus', function() {
         $(this).removeClass('is-invalid');
-        $(`#${this.id}Error`).text('');
+        $(`#${this.id}Error`).text('').removeClass('show');
     });
 
     $('#commentForm').on('submit', function(e) {
@@ -136,11 +136,12 @@ function initComments() {
             success: function(response) {
                 if (response.success) {
                     $('#commentForm')[0].reset();
-                    $('#nameError, #textError').text('');
+                    $('#nameError, #textError').text('').removeClass('show');
+                    $('#name, #text').removeClass('is-invalid');
 
                     const alert = $(`
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            ✅ ${response.message}
+                            ${response.message}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     `);
@@ -154,7 +155,7 @@ function initComments() {
                 const response = xhr.responseJSON;
                 if (response && response.errors) {
                     $.each(response.errors, function(key, value) {
-                        $(`#${key}Error`).text(value);
+                        $(`#${key}Error`).text(value).addClass('show');
                         $(`#${key}`).addClass('is-invalid');
                     });
                 }
