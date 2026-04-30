@@ -21,8 +21,27 @@
     </div>
 <?php endif; ?>
 
-<?php if ($pager): ?>
+<?php if (isset($totalPages) && $totalPages > 1): ?>
     <nav aria-label="Page navigation" class="mb-4">
-        <?= $pager->links('comments', 'default_full') ?>
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <div class="text-muted small align-self-center">
+                Страница <span class="fw-bold"><?= $currentPage ?></span> из
+                <span class="fw-bold"><?= $totalPages ?></span>
+            </div>
+            <ul class="pagination">
+                <li class="page-item <?= $currentPage == 1 ? 'disabled' : '' ?>">
+                    <button class="page-link pagination-btn" data-page="1" <?= $currentPage == 1 ? 'disabled' : '' ?>>« Первая</button>
+                </li>
+                <li class="page-item <?= $currentPage == 1 ? 'disabled' : '' ?>">
+                    <button class="page-link pagination-btn" data-page="<?= max(1, $currentPage - 1) ?>" <?= $currentPage == 1 ? 'disabled' : '' ?>>‹ Назад</button>
+                </li>
+                <li class="page-item <?= $currentPage == $totalPages ? 'disabled' : '' ?>">
+                    <button class="page-link pagination-btn" data-page="<?= min($totalPages, $currentPage + 1) ?>" <?= $currentPage == $totalPages ? 'disabled' : '' ?>>Вперед ›</button>
+                </li>
+                <li class="page-item <?= $currentPage == $totalPages ? 'disabled' : '' ?>">
+                    <button class="page-link pagination-btn" data-page="<?= $totalPages ?>" <?= $currentPage == $totalPages ? 'disabled' : '' ?>>Последняя »</button>
+                </li>
+            </ul>
+        </div>
     </nav>
 <?php endif; ?>

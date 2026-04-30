@@ -8,7 +8,13 @@ $this->section('content');
 
     <!-- Список комментариев -->
     <div id="commentsContainer">
-        <?php echo view('comments/list', ['comments' => $comments, 'pager' => $pager]); ?>
+        <?php echo view('comments/list', [
+            'comments' => $comments,
+            'pager' => $pager,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+            'totalComments' => $totalComments
+        ]); ?>
     </div>
 
     <!-- Форма добавления комментария -->

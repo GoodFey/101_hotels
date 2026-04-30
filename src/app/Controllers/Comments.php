@@ -18,10 +18,15 @@ class Comments extends BaseController
             ->paginate($perPage, 'comments', $page);
         
         $pager = $commentModel->pager;
-        
+        $totalComments = $commentModel->countAll();
+        $totalPages = ceil($totalComments / $perPage);
+
         return view('comments/index', [
             'comments' => $comments,
-            'pager' => $pager
+            'pager' => $pager,
+            'currentPage' => (int)$page,
+            'totalPages' => $totalPages,
+            'totalComments' => $totalComments
         ]);
     }
     
@@ -90,10 +95,15 @@ class Comments extends BaseController
             ->paginate($perPage, 'comments', $page);
 
         $pager = $commentModel->pager;
+        $totalComments = $commentModel->countAll();
+        $totalPages = ceil($totalComments / $perPage);
 
         $html = view('comments/list', [
             'comments' => $comments,
-            'pager' => $pager
+            'pager' => $pager,
+            'currentPage' => (int)$page,
+            'totalPages' => $totalPages,
+            'totalComments' => $totalComments
         ]);
 
         return $this->response->setJSON([

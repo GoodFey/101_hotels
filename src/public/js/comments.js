@@ -35,12 +35,12 @@ function bindDeleteButtons() {
 }
 
 function bindPaginationLinks() {
-    $(document).off('click', '#commentsContainer a');
-    $(document).on('click', '#commentsContainer a', function(e) {
-        e.preventDefault();
-        const url = $(this).attr('href');
-        const page = new URL(url, window.location.origin).searchParams.get('page') || 1;
-        refreshComments(page);
+    $(document).off('click', '#commentsContainer .pagination-btn');
+    $(document).on('click', '#commentsContainer .pagination-btn', function() {
+        const page = $(this).data('page');
+        if (page) {
+            refreshComments(page);
+        }
     });
 }
 
