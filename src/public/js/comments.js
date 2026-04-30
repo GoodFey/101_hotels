@@ -1,7 +1,47 @@
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+function refreshComments(page = 1) {
+    $.ajax({
+        url: '/comments/list',
+        type: 'GET',
+        data: { page: page },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                $('#commentsContainer').html(response.html);
+                bindDeleteButtons();
+                bindPaginationLinks();
+            }
+        }
+    });
+}
+
+function bindDeleteButtons() {
+    $(document).off('click', '.delete-btn');
+    $(document).on('click', '.delete-btn', function() {
+        if (!confirm('Вы уверены?')) return;
+
+        const id = $(this).data('id');
+
+        $.ajax({
+            url: `/comments/${id}`,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    refreshComments(1);
+                }
+            }
+        });
+    });
+}
+
+function bindPaginationLinks() {
+    $(document).off('click', '#commentsContainer a');
+    $(document).on('click', '#commentsContainer a', function(e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+        const page = new URL(url, window.location.origin).searchParams.get('page') || 1;
+        refreshComments(page);
+    });
 }
 
 function initComments() {
@@ -26,31 +66,6 @@ function initComments() {
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    const comment = response.comment;
-                    const $emptyAlert = $('#commentsList .alert-info');
-                    
-                    if ($emptyAlert.length) {
-                        $emptyAlert.remove();
-                    }
-                    
-                    const $newComment = $(`
-                        <div class="card mb-3 comment-item" data-id="${comment.id}">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-envelope"></i> ${escapeHtml(comment.name)}
-                                </h5>
-                                <p class="card-text">${escapeHtml(comment.text)}</p>
-                                <small class="text-muted d-block mb-2">
-                                    📅 ${comment.date}
-                                </small>
-                                <button class="btn btn-sm btn-danger delete-btn" data-id="${comment.id}">
-                                    🗑️ Удалить
-                                </button>
-                            </div>
-                        </div>
-                    `);
-                    
-                    $('#commentsList').prepend($newComment);
                     $('#commentForm')[0].reset();
                     $('#date').val(today);
                     
@@ -63,6 +78,7 @@ function initComments() {
                     $('#commentForm').before(alert);
                     
                     setTimeout(() => alert.fadeOut(300, function() { $(this).remove(); }), 3000);
+                    refreshComments(1);
                 }
             },
             error: function(xhr) {
@@ -76,25 +92,8 @@ function initComments() {
         });
     });
 
-    $(document).on('click', '.delete-btn', function() {
-        if (!confirm('Вы уверены?')) return;
-        
-        const id = $(this).data('id');
-        const $item = $(this).closest('.comment-item');
-        
-        $.ajax({
-            url: `/comments/${id}`,
-            type: 'DELETE',
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    $item.fadeOut(300, function() {
-                        $(this).remove();
-                    });
-                }
-            }
-        });
-    });
+    bindDeleteButtons();
+    bindPaginationLinks();
 }
 
 $(document).ready(initComments);

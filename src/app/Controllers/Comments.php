@@ -77,5 +77,29 @@ class Comments extends BaseController
             'message' => 'Комментарий удален!'
         ]);
     }
+
+    public function getList(): \CodeIgniter\HTTP\ResponseInterface
+    {
+        $commentModel = new CommentModel();
+
+        $page = $this->request->getGet('page') ?? 1;
+        $perPage = 3;
+
+        $comments = $commentModel
+            ->orderBy('id', 'DESC')
+            ->paginate($perPage, 'comments', $page);
+
+        $pager = $commentModel->pager;
+
+        $html = view('comments/list', [
+            'comments' => $comments,
+            'pager' => $pager
+        ]);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'html' => $html
+        ]);
+    }
 }
 
