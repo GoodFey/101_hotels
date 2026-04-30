@@ -3,6 +3,28 @@ $this->extend('layout');
 $this->section('content');
 ?>
 
+<style>
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    #nameError {
+        animation: slideDown 0.2s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 <div class="container mt-5">
     <h1 class="mb-4">💬 Комментарии</h1>
 
@@ -51,12 +73,11 @@ $this->section('content');
                 <div class="form-group mb-3">
                     <label for="name">Email <span class="text-danger">*</span></label>
                     <input 
-                        type="email" 
-                        class="form-control" 
+                        type="text"
+                        class="form-control"
                         id="name" 
                         name="name" 
                         placeholder="your@email.com"
-                        required
                     >
                     <small class="text-danger d-block mt-1" id="nameError"></small>
                 </div>
@@ -69,22 +90,10 @@ $this->section('content');
                         name="text" 
                         rows="4"
                         placeholder="Введите ваш комментарий..."
-                        required
                     ></textarea>
                     <small class="text-danger d-block mt-1" id="textError"></small>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label for="date">Дата <span class="text-danger">*</span></label>
-                    <input 
-                        type="date" 
-                        class="form-control" 
-                        id="date" 
-                        name="date"
-                        required
-                    >
-                    <small class="text-danger d-block mt-1" id="dateError"></small>
-                </div>
 
                 <button type="submit" class="btn btn-primary btn-block w-100">
                     ✅ Отправить комментарий

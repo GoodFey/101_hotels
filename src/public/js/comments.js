@@ -5,6 +5,55 @@ function getSortParams() {
     };
 }
 
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function validateNameField() {
+    const email = $('#name').val().trim();
+    const errorEl = $('#nameError');
+    const inputEl = $('#name');
+
+    if (!email) {
+        errorEl.text('Email не может быть пустым');
+        inputEl.addClass('is-invalid');
+        return false;
+    }
+
+    if (!validateEmail(email)) {
+        errorEl.text('Введите корректный email адрес');
+        inputEl.addClass('is-invalid');
+        return false;
+    }
+
+    errorEl.text('');
+    inputEl.removeClass('is-invalid');
+    return true;
+}
+
+function validateTextField() {
+    const text = $('#text').val().trim();
+    const errorEl = $('#textError');
+    const inputEl = $('#text');
+
+    if (!text) {
+        errorEl.text('Комментарий не может быть пустым');
+        inputEl.addClass('is-invalid');
+        return false;
+    }
+
+    if (text.length < 5) {
+        errorEl.text('Минимум 5 символов');
+        inputEl.addClass('is-invalid');
+        return false;
+    }
+
+    errorEl.text('');
+    inputEl.removeClass('is-invalid');
+    return true;
+}
+
 function refreshComments(page = 1) {
     const sortParams = getSortParams();
     $.ajax({
@@ -57,22 +106,26 @@ function bindPaginationLinks() {
 }
 
 function initComments() {
-    const today = new Date().toISOString().split('T')[0];
-    $('#date').val(today);
 
     $('#sortBy, #sortDir').on('change', function() {
         refreshComments(1);
     });
 
+    $('#name, #text').on('focus', function() {
+        $(this).removeClass('is-invalid');
+        $(`#${this.id}Error`).text('');
+    });
+
     $('#commentForm').on('submit', function(e) {
         e.preventDefault();
         
-        $('.text-danger').text('');
-        
+        if (!validateNameField() || !validateTextField()) {
+            return false;
+        }
+
         const formData = {
             name: $('#name').val(),
-            text: $('#text').val(),
-            date: $('#date').val()
+            text: $('#text').val()
         };
 
         $.ajax({
@@ -83,8 +136,8 @@ function initComments() {
             success: function(response) {
                 if (response.success) {
                     $('#commentForm')[0].reset();
-                    $('#date').val(today);
-                    
+                    $('#nameError, #textError').text('');
+
                     const alert = $(`
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             ✅ ${response.message}
@@ -102,6 +155,7 @@ function initComments() {
                 if (response && response.errors) {
                     $.each(response.errors, function(key, value) {
                         $(`#${key}Error`).text(value);
+                        $(`#${key}`).addClass('is-invalid');
                     });
                 }
             }

@@ -42,8 +42,7 @@ class Comments extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'name'  => 'required|valid_email',
-            'text'  => 'required|min_length[5]',
-            'date'  => 'required'
+            'text'  => 'required|min_length[5]'
         ]);
         
         if (!$validation->withRequest($this->request)->run()) {
@@ -52,11 +51,11 @@ class Comments extends BaseController
                 'errors' => $validation->getErrors()
             ]);
         }
-        
+
         $id = $commentModel->insert([
             'name' => $this->request->getPost('name'),
             'text' => $this->request->getPost('text'),
-            'date' => $this->request->getPost('date'),
+            'date' => date('Y-m-d'),
             'created_at' => date('Y-m-d H:i:s')
         ]);
         
